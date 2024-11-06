@@ -33,8 +33,8 @@ def addBirthday():
 def listBirthdaysPerMonth():
     months = [datetime.datetime.strptime(birthday[name], "%d.%m.%Y").strftime("%B") for name in birthday]
     months.sort()
-    for key, group in groupby(months):
-        print(f"{key}: {len(list(group))}")
+    c = Counter(months)
+    print(c)
 
 while True:
 
