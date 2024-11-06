@@ -5,13 +5,19 @@
 
 import json
 import datetime
+import calendar
 from collections import Counter
 from itertools import groupby
+from bokeh.plotting import figure, show, output_file
 
 with open("dataFiles/birthdays.json", "r", encoding="utf-8") as file:
     birthday = json.load(file)
 
-def list():
+def getMonths():
+    months = [datetime.datetime.strptime(birthday[name], "%d.%m.%Y").strftime("%B") for name in birthday]
+    return months
+
+def listNames():
     print("We know the birthdays of:")
     for name in birthday:
         print(name)
@@ -32,14 +38,23 @@ def add():
     print("Birthday added.")
 
 def groupByMonth():
-    months = [datetime.datetime.strptime(birthday[name], "%d.%m.%Y").strftime("%B") for name in birthday]
-    months.sort()
+    months = getMonths()
     c = Counter(months)
     for month, count in c.items():
         print(f"{month}: {count}")
 
 def plot():
-    print("Not implemented yet")
+    output_file("dataFiles/birthdayPlot.html")
+    months = getMonths()
+
+    y = [c for c in [months.count(month) for month in calendar.month_name[1:]] if  c > 0]
+    x = list(set(months))
+
+    print(y, x, calendar.month_name[1:])
+
+    f = figure(x_range=calendar.month_name[1:],  title="Birthdays by Month")
+    f.vbar(x=x, top=y, width=0.5)
+    show(f)
 
 def main():
     while True:
@@ -57,7 +72,7 @@ def main():
         if action.startswith("Q"):
             raise SystemExit(0)
         elif action.startswith("L"):
-            list()
+            listNames()
         elif action.startswith("F"):
             find()
         elif action.startswith("A"):
