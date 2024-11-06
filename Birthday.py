@@ -49,9 +49,6 @@ def plot():
 
     y = [c for c in [months.count(month) for month in calendar.month_name[1:]] if  c > 0]
     x = list(set(months))
-
-    print(y, x, calendar.month_name[1:])
-
     f = figure(x_range=calendar.month_name[1:],  title="Birthdays by Month")
     f.vbar(x=x, top=y, width=0.5)
     show(f)
